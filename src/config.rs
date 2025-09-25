@@ -93,7 +93,7 @@ impl From<DeviceType> for LSDeviceType {
             DeviceType::UnknownSpotify => LSDeviceType::UnknownSpotify,
             DeviceType::CarThing => LSDeviceType::CarThing,
             DeviceType::Observer => LSDeviceType::Observer,
-            DeviceType::HomeThing => LSDeviceType::HomeThing,
+            DeviceType::HomeThing => LSDeviceType::Unknown, // HomeThing was removed in 0.7.1
         }
     }
 }

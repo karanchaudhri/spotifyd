@@ -179,13 +179,10 @@ pub(crate) fn spawn_program_on_event(
             env.insert("PLAYER_EVENT", "shuffle_changed".to_string());
             env.insert("SHUFFLE", shuffle.to_string());
         }
-        PlayerEvent::RepeatChanged { repeat } => {
+        PlayerEvent::RepeatChanged { context, track, .. } => {
             env.insert("PLAYER_EVENT", "repeat_changed".to_string());
-            let val = match repeat {
-                true => "all",
-                false => "none",
-            }
-            .to_string();
+            // Note: repeat field structure changed in 0.7.1, using context for compatibility
+            let val = if context { "context" } else { "none" }.to_string();
             env.insert("REPEAT", val);
         }
         PlayerEvent::AutoPlayChanged { auto_play } => {
@@ -195,6 +192,10 @@ pub(crate) fn spawn_program_on_event(
         PlayerEvent::FilterExplicitContentChanged { filter } => {
             env.insert("PLAYER_EVENT", "filterexplicit_changed".to_string());
             env.insert("FILTEREXPLICIT", filter.to_string());
+        }
+        PlayerEvent::PositionChanged { position_ms, .. } => {
+            env.insert("PLAYER_EVENT", "position_changed".to_string());
+            env.insert("POSITION_MS", position_ms.to_string());
         }
     }
     spawn_program(shell, cmd, env)

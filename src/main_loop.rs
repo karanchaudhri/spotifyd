@@ -13,7 +13,7 @@ use futures::{
     future::{self, Fuse, FusedFuture},
     stream::Peekable,
 };
-use librespot_connect::{config::ConnectConfig, spirc::Spirc};
+use librespot_connect::{ConnectConfig, Spirc};
 use librespot_core::{
     Error, SessionConfig, authentication::Credentials, cache::Cache, config::DeviceType,
     session::Session,
@@ -126,8 +126,9 @@ impl MainLoop {
                     name: self.device_name.clone(),
                     device_type: self.device_type,
                     is_group: false,
-                    initial_volume: self.initial_volume,
-                    has_volume_ctrl: self.has_volume_ctrl,
+                    initial_volume: self.initial_volume.unwrap_or(50),
+                    disable_volume: !self.has_volume_ctrl,
+                    volume_steps: 64,
                 },
                 session.clone(),
                 creds.clone(),
