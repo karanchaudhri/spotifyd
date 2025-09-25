@@ -10,6 +10,14 @@ pub struct AlsaMixer {
 }
 
 impl AlsaMixer {
+    pub fn with_config(device: String, mixer: String, linear_scaling: bool) -> Result<Self, librespot_core::Error> {
+        Ok(AlsaMixer {
+            device,
+            mixer,
+            linear_scaling,
+        })
+    }
+
     fn set_volume_with_err(&self, volume: u16) -> Result<(), Box<dyn Error>> {
         let mixer = alsa::mixer::Mixer::new(&self.device, false)?;
 
@@ -36,12 +44,12 @@ impl AlsaMixer {
 }
 
 impl Mixer for AlsaMixer {
-    fn open(_: MixerConfig) -> AlsaMixer {
-        AlsaMixer {
+    fn open(_: MixerConfig) -> Result<AlsaMixer, librespot_core::Error> {
+        Ok(AlsaMixer {
             device: "default".to_string(),
             mixer: "Master".to_string(),
             linear_scaling: false,
-        }
+        })
     }
 
     fn volume(&self) -> u16 {

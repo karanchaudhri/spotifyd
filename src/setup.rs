@@ -33,14 +33,14 @@ pub(crate) fn initial_state(
                     config.volume_controller,
                     config::VolumeController::AlsaLinear
                 );
-                Arc::new(alsa_mixer::AlsaMixer {
-                    device: control_device
+                Arc::new(alsa_mixer::AlsaMixer::with_config(
+                    control_device
                         .clone()
                         .or_else(|| audio_device.clone())
                         .unwrap_or_else(|| "default".to_string()),
-                    mixer: mixer.clone().unwrap_or_else(|| "Master".to_string()),
-                    linear_scaling: linear,
-                })
+                    mixer.clone().unwrap_or_else(|| "Master".to_string()),
+                    linear,
+                ).unwrap())
             }
             _ => {
                 info!("Using software volume controller.");
